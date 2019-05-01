@@ -14,7 +14,7 @@ import { FilterModel, MovieModel } from "../models/models";
 })
 
 export class MoviesComponent implements OnInit, OnDestroy {
-  $filter: Subscription;
+  $movies: Subscription;
   moviesList: Array<MovieModel> = [];
   DEBOUNCE_TIMER: number = 300;
   movieService: MoviesService;
@@ -24,7 +24,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.$filter = this.getStreamFromFilter().pipe(
+    this.$movies = this.getStreamFromFilter().pipe(
       switchMap((filter) => {
         return this.movieService.getMovies(filter);
       })
@@ -69,6 +69,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.$filter.unsubscribe();
+    this.$movies.unsubscribe();
   }
 }
