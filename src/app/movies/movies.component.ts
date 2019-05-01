@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
 import { fromEvent, merge, of, Observable, Subscription } from 'rxjs';
 import { debounceTime, scan, map, startWith, switchMap, distinctUntilChanged } from 'rxjs/operators';
@@ -14,6 +14,9 @@ import { FilterModel, MovieModel } from "../models/models";
 })
 
 export class MoviesComponent implements OnInit, OnDestroy {
+  @ViewChild('label') label: ElementRef<HTMLElement>;
+  @ViewChild('year') year: ElementRef<HTMLElement>;
+
   $movies: Subscription;
   moviesList: Array<MovieModel> = [];
   DEBOUNCE_TIMER: number = 300;
@@ -32,12 +35,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
   }
 
   getStreamFromFilter () : Observable<FilterModel> {
-    const label = document.getElementById('label');
-    const year = document.getElementById('year');
-
     // distinctUntilChanged not working as i want :/
-
-    const x = fromEvent(label, 'input').pipe(
+    const x = fromEvent(this.label.nativeElement, 'input').pipe(
       debounceTime(this.DEBOUNCE_TIMER),
       map(
         (e) => {
@@ -48,7 +47,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
       ),
     );
 
-    const y = fromEvent(year, 'input').pipe(
+    const y = fromEvent(this.year.nativeElement, 'input').pipe(
       debounceTime(this.DEBOUNCE_TIMER),
       map(
         (e) => {
